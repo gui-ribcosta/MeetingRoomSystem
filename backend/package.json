@@ -1,0 +1,22 @@
+{
+  "name": "meeting-room-backend",
+  "version": "1.0.0",
+  "description": "Backend do sistema de salas de reunião",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": ["meeting-room", "backend"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "sqlite3": "^5.1.7",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+<meta charset="UTF-8">
+<title>Meeting Room System</title>
+
+<link rel="stylesheet" href="style.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="layout">
+
+<aside class="sidebar">
+
+  <h2>Rooms</h2>
+
+  <nav>
+    <button onclick="scrollToSection('criar')">Criar sala</button>
+    <button onclick="scrollToSection('salas')">Salas</button>
+    <button onclick="scrollToSection('entrar')">Entrar</button>
+  </nav>
+
+</aside>
+
+<main class="content">
+
+<header>
+
+    <button class="menu-toggle" onclick="toggleMenu()">
+☰
+</button>
+
+<h1>Meeting Room System</h1>
+<p>GERENCIE SALAS E PARTICIPANTES</p>
+
+</header>
+
+<section id="criar" class="card">
+
+<h3>CRIAR SALA</h3>
+
+<input id="nomeSala" placeholder="Nome da sala">
+
+<button onclick="criarSala()">Criar sala</button>
+
+</section>
+
+<section id="salas" class="card">
+
+<h3>SALAS DISPONÍVEIS</h3>
+
+<input 
+id="buscarSala" 
+placeholder="🔎 Buscar sala..."
+oninput="filtrarSalas()"
+>
+
+<div id="listaSalas"></div>
+
+</section>
+
+<section id="entrar" class="card">
+
+<h3>ENTRAR NA SALA</h3>
+
+<input id="salaNome" placeholder="Nome da sala">
+
+<input id="codigo" placeholder="Código de acesso">
+
+<button onclick="entrar()">Entrar</button>
+
+<p id="resultado"></p>
+
+</section>
+
+</main>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
