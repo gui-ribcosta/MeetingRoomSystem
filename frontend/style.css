@@ -1,6 +1,5 @@
-faca as adaptacoes para os botoes de criar sala, apagar, remover e entrar funcionem
 
-/* ================= BASE ================= */
+/*  BASE  */
 
 html{
 scroll-behavior:smooth;
@@ -19,7 +18,7 @@ color:white;
 min-height:100vh;
 }
 
-/* ================= LAYOUT ================= */
+/* LAYOUT */
 
 .layout{
 display:flex;
@@ -31,7 +30,7 @@ flex:1;
 padding:40px;
 }
 
-/* ================= SIDEBAR ================= */
+/* SIDEBAR */
 
 .sidebar{
 width:230px;
@@ -68,7 +67,7 @@ transition:0.2s;
 color:white;
 }
 
-/* ================= HEADER ================= */
+/* HEADER */
 
 header{
 margin-bottom:40px;
@@ -84,7 +83,7 @@ color:#94a3b8;
 margin-top:5px;
 }
 
-/* ================= INPUT ================= */
+/* INPUT */
 
 input{
 width:100%;
@@ -109,7 +108,7 @@ margin-top:20px;
 margin-bottom:20px;
 }
 
-/* ================= BUTTON ================= */
+/* BUTTON */
 
 button{
 padding:10px 14px;
@@ -134,7 +133,7 @@ button.danger:hover{
 background:#dc2626;
 }
 
-/* ================= CARDS ================= */
+/* CARDS */
 
 .card{
 background:#020617;
@@ -149,7 +148,7 @@ transition:0.2s;
 border-color:#3b82f6;
 }
 
-/* ================= SALAS ================= */
+/* SALAS */
 
 #listaSalas{
 display:grid;
@@ -177,7 +176,7 @@ margin-bottom:10px;
 margin-left:8px;
 }
 
-/* ================= PARTICIPANTES ================= */
+/* PARTICIPANTES */
 
 .codes{
 margin-top:10px;
@@ -214,14 +213,14 @@ color:#38bdf8;
 margin-left:6px;
 }
 
-/* ================= RESULTADO ================= */
+/* RESULTADO */
 
 #resultado{
 margin-top:10px;
 font-weight:500;
 }
 
-/* ================= MENU MOBILE ================= */
+/* MENU MOBILE */
 
 .menu-toggle{
 display:none;
@@ -248,7 +247,7 @@ margin-bottom:15px;
   color: white;
 }
 
-/* ================= RESPONSIVIDADE ================= */
+/* RESPONSIVIDADE */
 
 @media (max-width:900px){
 

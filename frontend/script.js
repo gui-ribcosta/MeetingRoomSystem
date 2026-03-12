@@ -2,307 +2,262 @@ const API = "http://localhost:3000"
 
 let todasSalas = []
 
-/* ================= CRIAR SALA ================= */
-
-async function criarSala(){
-
-const nome = document.getElementById("nomeSala").value.trim()
-
-if(!nome){
-alert("Digite o nome da sala")
-return
+async function request(url, options = {}) {
+  try {
+    const res = await fetch(API + url, options)
+    return await res.json()
+  } catch (err) {
+    console.error("Erro na requisição:", err)
+    alert("Erro ao conectar com o servidor")
+  }
 }
 
-const res = await fetch(API+"/salas",{
-method:"POST",
-headers:{ "Content-Type":"application/json" },
-body:JSON.stringify({nome})
-})
+async function criarSala() {
 
-const data = await res.json()
+  const input = document.getElementById("nomeSala")
+  const nome = input.value.trim()
 
-if(data.erro){
-alert(data.erro)
-return
+  if (!nome) {
+    alert("Digite o nome da sala")
+    return
+  }
+
+  const data = await request("/salas", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nome })
+  })
+
+  if (data.erro) {
+    alert(data.erro)
+    return
+  }
+
+  alert(data.sucesso)
+
+  input.value = ""
+
+  carregarSalas()
 }
 
-alert(data.sucesso)
+async function carregarSalas() {
 
-document.getElementById("nomeSala").value=""
+  const salas = await request("/salas")
 
-carregarSalas()
+  todasSalas = salas
 
+  renderSalas(salas)
 }
 
-/* ================= CARREGAR SALAS ================= */
+function renderSalas(salas) {
 
-async function carregarSalas(){
+  const container = document.getElementById("listaSalas")
 
-const res = await fetch(API+"/salas")
+  container.innerHTML = ""
 
-const salas = await res.json()
+  salas.forEach(sala => {
 
-todasSalas = salas
+    const card = document.createElement("div")
+    card.className = "room-card"
 
-renderSalas(salas)
+    card.innerHTML = `
+      <div class="room-header">
+        <h3>${sala.nome}</h3>
 
-}
+        <div class="room-actions">
 
-/* ================= DESENHAR SALAS ================= */
+          <button onclick="gerarCodigo(${sala.id})">
+            ➕ Participante
+          </button>
 
-function renderSalas(salas){
+          <button class="danger" onclick="deletarSala(${sala.id})">
+            🗑
+          </button>
 
-const lista = document.getElementById("listaSalas")
+        </div>
+      </div>
 
-lista.innerHTML=""
+      <div id="codigos-${sala.id}" class="codes"></div>
+    `
 
-salas.forEach(sala=>{
+    container.appendChild(card)
 
-const card = document.createElement("div")
+    carregarCodigos(sala.id)
 
-card.className="room-card"
-
-card.innerHTML=`
-
-<div class="room-header">
-
-<h3>${sala.nome}</h3>
-
-<div class="room-actions">
-
-<button onclick="gerarCodigo(${sala.id})">
-➕ Participante
-</button>
-
-<button class="danger" onclick="deletarSala(${sala.id})">
-🗑
-</button>
-
-</div>
-
-</div>
-
-<div id="codigos-${sala.id}" class="codes"></div>
-
-`
-
-lista.appendChild(card)
-
-carregarCodigos(sala.id)
-
-})
+  })
 
 }
 
-/* ================= BUSCAR SALA ================= */
+function filtrarSalas() {
 
-function filtrarSalas(){
+  const termo = document
+    .getElementById("buscarSala")
+    .value
+    .toLowerCase()
 
-const termo = document
-.getElementById("buscarSala")
-.value
-.toLowerCase()
+  const filtradas = todasSalas.filter(sala =>
+    sala.nome.toLowerCase().includes(termo)
+  )
 
-const filtradas = todasSalas.filter(sala =>
-sala.nome.toLowerCase().includes(termo)
-)
-
-renderSalas(filtradas)
+  renderSalas(filtradas)
 
 }
 
-/* ================= GERAR CODIGO ================= */
+async function gerarCodigo(salaId) {
 
-async function gerarCodigo(salaId){
+  let apelido = prompt("Nome do participante (opcional)")
 
-let apelido = prompt("Nome do participante (opcional)")
+  if (!apelido) apelido = ""
 
-if(!apelido){
-apelido=""
-}
+  const data = await request(`/salas/${salaId}/codigos`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ apelido })
+  })
 
-const res = await fetch(API+"/salas/"+salaId+"/codigos",{
+  alert(data.erro || data.sucesso)
 
-method:"POST",
-headers:{ "Content-Type":"application/json" },
-body:JSON.stringify({apelido})
-
-})
-
-const data = await res.json()
-
-alert(data.erro || data.sucesso)
-
-carregarCodigos(salaId)
+  carregarCodigos(salaId)
 
 }
 
-/* ================= LISTAR CODIGOS ================= */
+async function carregarCodigos(salaId) {
 
-async function carregarCodigos(salaId){
+  const codigos = await request(`/salas/${salaId}/codigos`)
 
-const res = await fetch(API+"/salas/"+salaId+"/codigos")
+  const div = document.getElementById(`codigos-${salaId}`)
 
-const codigos = await res.json()
+  div.innerHTML = ""
 
-const div = document.getElementById("codigos-"+salaId)
+  const contador = document.createElement("div")
+  contador.className = "contador"
+  contador.innerText = `Participantes: ${codigos.length}/4`
 
-div.innerHTML=""
+  div.appendChild(contador)
 
-/* contador */
+  codigos.forEach(c => {
 
-const contador = document.createElement("div")
+    const el = document.createElement("div")
+    el.className = "code-card"
 
-contador.className="contador"
+    el.innerHTML = `
+      <div class="code-info">
 
-contador.innerText=`Participantes: ${codigos.length}/4`
+        <span class="apelido">
+          👤 ${c.apelido}
+        </span>
 
-div.appendChild(contador)
+        <span class="codigo">
+          🔑 ${c.codigo}
+        </span>
 
-/* listar participantes */
+      </div>
 
-codigos.forEach(c=>{
+      <div class="code-actions">
 
-const el = document.createElement("div")
+        <button onclick="copiarCodigo('${c.codigo}')">
+          📋
+        </button>
 
-el.className="code-card"
+        <button class="danger" onclick="deletarCodigo(${c.id}, ${salaId})">
+          ❌
+        </button>
 
-el.innerHTML=`
+      </div>
+    `
 
-<div class="code-info">
+    div.appendChild(el)
 
-<span class="apelido">👤 ${c.apelido}</span>
-
-<span class="codigo">🔑 ${c.codigo}</span>
-
-</div>
-
-<div class="code-actions">
-
-<button onclick="copiarCodigo('${c.codigo}')">
-📋
-</button>
-
-<button class="danger" onclick="deletarCodigo(${c.id},${salaId})">
-❌
-</button>
-
-</div>
-
-`
-
-div.appendChild(el)
-
-})
+  })
 
 }
 
-/* ================= COPIAR CODIGO ================= */
+function copiarCodigo(codigo) {
 
-function copiarCodigo(codigo){
+  navigator.clipboard.writeText(codigo)
 
-navigator.clipboard.writeText(codigo)
-
-alert("Código copiado!")
+  alert("Código copiado!")
 
 }
 
-/* ================= REMOVER PARTICIPANTE ================= */
+async function deletarCodigo(id, salaId) {
 
-async function deletarCodigo(id,salaId){
+  const confirmar = confirm("Remover este participante?")
 
-const confirmar = confirm("Remover este participante?")
+  if (!confirmar) return
 
-if(!confirmar) return
+  await request(`/codigos/${id}`, {
+    method: "DELETE"
+  })
 
-await fetch(API+"/codigos/"+id,{
-method:"DELETE"
-})
-
-carregarCodigos(salaId)
+  carregarCodigos(salaId)
 
 }
 
-/* ================= REMOVER SALA ================= */
+async function deletarSala(id) {
 
-async function deletarSala(id){
+  const confirmar = confirm("Excluir esta sala?")
 
-const confirmar = confirm("Excluir esta sala?")
+  if (!confirmar) return
 
-if(!confirmar) return
+  await request(`/salas/${id}`, {
+    method: "DELETE"
+  })
 
-await fetch(API+"/salas/"+id,{
-method:"DELETE"
-})
-
-carregarSalas()
+  carregarSalas()
 
 }
 
-/* ================= ENTRAR NA SALA ================= */
+async function entrar() {
 
-async function entrar(){
+  const nomeSala = document.getElementById("salaNome").value
+  const codigo = document.getElementById("codigo").value
 
-const nomeSala = document.getElementById("salaNome").value
+  if (!nomeSala || !codigo) {
+    alert("Preencha todos os campos")
+    return
+  }
 
-const codigo = document.getElementById("codigo").value
+  const data = await request("/entrar", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nomeSala, codigo })
+  })
 
-if(!nomeSala || !codigo){
-
-alert("Preencha todos os campos")
-
-return
-
-}
-
-const res = await fetch(API+"/entrar",{
-
-method:"POST",
-headers:{ "Content-Type":"application/json" },
-body:JSON.stringify({nomeSala,codigo})
-
-})
-
-const data = await res.json()
-
-document.getElementById("resultado").innerText =
-data.erro || data.sucesso
+  document.getElementById("resultado").innerText =
+    data.erro || data.sucesso
 
 }
 
-/* ================= NAVEGAÇÃO SIDEBAR ================= */
+function scrollToSection(id) {
 
-function scrollToSection(id){
+  const section = document.getElementById(id)
 
-const section = document.getElementById(id)
+  if (section) {
+    section.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    })
+  }
 
-if(section){
-
-section.scrollIntoView({
-behavior:"smooth",
-block:"start"
-})
-
-}
-
-const sidebar = document.querySelector(".sidebar")
-sidebar.classList.remove("active")
+  document.querySelector(".sidebar").classList.remove("active")
 
 }
-
-/* ================= MENU MOBILE ================= */
 
 function toggleMenu() {
-    const sidebar = document.querySelector(".sidebar");
-    sidebar.classList.toggle("active");
+
+  const sidebar = document.querySelector(".sidebar")
+
+  sidebar.classList.toggle("active")
+
 }
 
 document.querySelectorAll(".sidebar nav button").forEach(btn => {
-    btn.addEventListener("click", () => {
-        document.querySelector(".sidebar").classList.remove("active");
-    });
-});
 
-/* ================= INICIAR SISTEMA ================= */
+  btn.addEventListener("click", () => {
+    document.querySelector(".sidebar").classList.remove("active")
+  })
+
+})
 
 carregarSalas()
