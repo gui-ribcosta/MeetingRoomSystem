@@ -53,6 +53,35 @@ app.post("/salas", (req, res) => {
 
 })
 
+app.put("/salas/:id", (req, res) => {
+  const salaId = req.params.id;
+  const novoNome = req.body.nome?.trim();
+
+  if (!novoNome) {
+    return res.status(400).json({ erro: "Informe o novo nome da sala" });
+  }
+
+  console.log(`Renomeando sala ${salaId} para: ${novoNome}`);
+
+  db.run(
+    "UPDATE salas SET nome = ? WHERE id = ?",
+    [novoNome, salaId],
+    function (err) {
+      if (err) {
+        return res.status(400).json({
+          erro: "Já existe uma sala com esse nome"
+        });
+      }
+
+      if (this.changes === 0) {
+        return res.status(404).json({ erro: "Sala não encontrada" });
+      }
+
+      res.json({ sucesso: "Sala renomeada com sucesso" });
+    }
+  );
+});
+
 app.delete("/salas/:id", (req, res) => {
 
   const salaId = req.params.id

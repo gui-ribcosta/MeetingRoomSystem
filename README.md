@@ -1,4 +1,4 @@
-## 📌 MeetingRoomSystem
+s## 📌 MeetingRoomSystem
 
 O **MeetingRoomSystem** é um sistema web completo para gerenciamento de salas de reunião, com controle de participantes por códigos de acesso únicos. Ele permite criar, listar e deletar salas, adicionar participantes, gerar códigos únicos e controlar o acesso de forma prática.
 

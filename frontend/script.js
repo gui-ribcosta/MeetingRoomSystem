@@ -58,22 +58,28 @@ function renderSalas(salas) {
   salas.forEach(sala => {
 
     const card = document.createElement("div")
-    card.className = "room-card"
+    card.className = "room-card collapsed" // Inicia recolhido
+    card.id = `room-card-${sala.id}`
 
     card.innerHTML = `
       <div class="room-header">
-        <h3>${sala.nome}</h3>
+        <div class="room-title-area" onclick="toggleSala(${sala.id})" title="Expandir/Recolher participantes">
+          <i class="fa-solid fa-chevron-down"></i>
+          <h3 id="room-title-${sala.id}">${sala.nome}</h3>
+        </div>
 
         <div class="room-actions">
-
-          <button onclick="gerarCodigo(${sala.id})">
-            ➕ Participante
+          <button class="add-participant-btn" onclick="gerarCodigo(${sala.id})" title="Adicionar participante">
+            <i class="fa-solid fa-user-plus"></i> Participante
           </button>
 
-          <button class="danger" onclick="deletarSala(${sala.id})">
-            🗑
+          <button class="edit-btn" onclick="editarSala(${sala.id}, '${sala.nome}')" title="Editar nome da sala">
+            <i class="fa-solid fa-pen"></i>
           </button>
 
+          <button class="danger" onclick="deletarSala(${sala.id})" title="Excluir sala">
+            <i class="fa-solid fa-trash"></i>
+          </button>
         </div>
       </div>
 
@@ -155,12 +161,12 @@ async function carregarCodigos(salaId) {
 
       <div class="code-actions">
 
-        <button onclick="copiarCodigo('${c.codigo}')">
-          📋
+        <button onclick="copiarCodigo('${c.codigo}')" title="Copiar código de acesso">
+          <i class="fa-solid fa-copy"></i>
         </button>
 
-        <button class="danger" onclick="deletarCodigo(${c.id}, ${salaId})">
-          ❌
+        <button class="danger" onclick="deletarCodigo(${c.id}, ${salaId})" title="Remover participante">
+          <i class="fa-solid fa-xmark"></i>
         </button>
 
       </div>
@@ -206,6 +212,35 @@ async function deletarSala(id) {
 
   carregarSalas()
 
+}
+
+async function editarSala(id, nomeAtual) {
+  const novoNome = prompt("Digite o novo nome para a sala:", nomeAtual);
+
+  if (!novoNome || novoNome.trim() === "" || novoNome === nomeAtual) {
+    return;
+  }
+
+  const data = await request(`/salas/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nome: novoNome })
+  });
+
+  if (data.erro) {
+    alert(data.erro);
+    return;
+  }
+
+  alert(data.sucesso);
+  carregarSalas();
+}
+
+function toggleSala(id) {
+  const card = document.getElementById(`room-card-${id}`);
+  if (card) {
+    card.classList.toggle("collapsed");
+  }
 }
 
 async function entrar() {

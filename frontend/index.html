@@ -3,87 +3,90 @@
 
 <head>
 
-<meta charset="UTF-8">
-<title>Meeting Room System</title>
+  <meta charset="UTF-8">
+  <title>Meeting Room System</title>
 
-<link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css">
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 </head>
 
 <body>
 
-<div class="layout">
+  <div class="layout">
 
-<aside class="sidebar">
+    <aside class="sidebar">
 
-  <h2>Rooms</h2>
+      <div class="sidebar-header">
+        <h2>Rooms</h2>
+        <button class="close-menu" onclick="toggleMenu()" title="Fechar menu"><i class="fa-solid fa-xmark"></i></button>
+      </div>
 
-  <nav>
-    <button onclick="scrollToSection('criar')">Criar sala</button>
-    <button onclick="scrollToSection('salas')">Salas</button>
-    <button onclick="scrollToSection('entrar')">Entrar</button>
-  </nav>
+      <nav>
+        <button onclick="scrollToSection('criar')" title="Criar uma nova sala"><i class="fa-solid fa-plus"
+            style="width: 20px;"></i> Criar sala</button>
+        <button onclick="scrollToSection('salas')" title="Listar salas disponíveis"><i class="fa-solid fa-list"
+            style="width: 20px;"></i> Salas</button>
+        <button onclick="scrollToSection('entrar')" title="Entrar em uma sala"><i class="fa-solid fa-right-to-bracket"
+            style="width: 20px;"></i> Entrar</button>
+      </nav>
 
-</aside>
+    </aside>
 
-<main class="content">
+    <main class="content">
 
-<header>
+      <header>
+        <div class="header-titles">
+          <h1>Meeting Room System</h1>
+          <p>GERENCIE SALAS E PARTICIPANTES</p>
+        </div>
+        <button class="menu-toggle" onclick="toggleMenu()" title="Abrir menu lateral">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </header>
 
-    <button class="menu-toggle" onclick="toggleMenu()">
-☰
-</button>
+      <section id="criar" class="card">
 
-<h1>Meeting Room System</h1>
-<p>GERENCIE SALAS E PARTICIPANTES</p>
+        <h3>CRIAR SALA</h3>
 
-</header>
+        <input id="nomeSala" placeholder="Nome da sala">
 
-<section id="criar" class="card">
+        <button onclick="criarSala()" title="Clique para criar uma nova sala">Criar sala</button>
 
-<h3>CRIAR SALA</h3>
+      </section>
 
-<input id="nomeSala" placeholder="Nome da sala">
+      <section id="salas" class="card">
 
-<button onclick="criarSala()">Criar sala</button>
+        <h3>SALAS DISPONÍVEIS</h3>
 
-</section>
+        <input id="buscarSala" placeholder="🔎 Buscar sala..." oninput="filtrarSalas()">
 
-<section id="salas" class="card">
+        <div id="listaSalas"></div>
 
-<h3>SALAS DISPONÍVEIS</h3>
+      </section>
 
-<input 
-id="buscarSala" 
-placeholder="🔎 Buscar sala..."
-oninput="filtrarSalas()"
->
+      <section id="entrar" class="card">
 
-<div id="listaSalas"></div>
+        <h3>ENTRAR NA SALA</h3>
 
-</section>
+        <input id="salaNome" placeholder="Nome da sala">
 
-<section id="entrar" class="card">
+        <input id="codigo" placeholder="Código de acesso">
 
-<h3>ENTRAR NA SALA</h3>
+        <button onclick="entrar()" title="Clique para entrar na sala escolhida">Entrar</button>
 
-<input id="salaNome" placeholder="Nome da sala">
+        <p id="resultado"></p>
 
-<input id="codigo" placeholder="Código de acesso">
+      </section>
 
-<button onclick="entrar()">Entrar</button>
+    </main>
 
-<p id="resultado"></p>
+  </div>
 
-</section>
-
-</main>
-
-</div>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 
 </body>
+
 </html>
