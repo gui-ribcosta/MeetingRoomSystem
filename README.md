@@ -54,7 +54,7 @@ Ideal para coworkings, startups e empresas que buscam uma ferramenta ágil e vis
 
 O projeto foi construído utilizando as melhores práticas de desenvolvimento web moderno:
 
-- **Frontend:** HTML5 semântico, CSS3 (Vanilla com foco em UX/UI) e JavaScript assíncrono.
+- **Frontend:** HTML5, CSS3 e JavaScript.
 - **Backend:** Node.js com Express para uma API REST robusta.
 - **Banco de Dados:** SQLite para persistência de dados leve e eficiente.
 - **Comunicação:** Integração via Fetch API com tratamento de erros centralizado.
